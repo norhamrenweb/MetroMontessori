@@ -118,10 +118,13 @@ public class Homepage extends MultiActionController {
                 ModelAndView mv = new ModelAndView("redirect:/homepage/loadLessons.htm");
                 String message = "welcome user";
                 int termId = 1, yearId = 1;
-                ResultSet rs2 = DBConect.ah.executeQuery("select defaultyearid,defaulttermid from ConfigSchool where configschoolid = 1");
-                while (rs2.next()) {
+                ResultSet rs2 = DBConect.ah.executeQuery("select defaultyearid,defaulttermid from ConfigSchool where  SchoolCode ='"+schoolCode+"'");
+                if (rs2.next()) {
                     termId = rs2.getInt("defaulttermid");
                     yearId = rs2.getInt("defaultyearid");
+                }
+                else{
+                    
                 }
                 session.setAttribute("user", user);
                 session.setAttribute("termId", termId);
@@ -171,6 +174,7 @@ public class Homepage extends MultiActionController {
     @ResponseBody
     public String getTermYear(HttpServletRequest hsr, HttpServletResponse hsr1){
         ArrayList<Tupla<Integer,String>> ret = new ArrayList<>();
+        
         String consulta="select * from SchoolTerm where YearID="+hsr.getParameter("id");
         try {
             ResultSet rs = DBConect.ah.executeQuery(consulta);
