@@ -10,6 +10,10 @@ package controladores;
  * @author nmohamed
  */
 import Montessori.*;
+import static Montessori.DBConect.passFTP;
+import static Montessori.DBConect.portFTP;
+import static Montessori.DBConect.serverFtp;
+import static Montessori.DBConect.userFTP;
 import Reports.DataFactoryFolder.Profesor;
 import com.google.gson.Gson;
 import java.sql.*;
@@ -53,11 +57,12 @@ public class Homepage extends MultiActionController {
     @RequestMapping
     public ModelAndView login(HttpServletRequest hsr, HttpServletResponse hsr1) throws Exception {
         DBConect.close();
-        c = new DBConect(hsr, hsr1);
+        c = new DBConect(hsr, hsr1,"CSG2","95.216.37.137","david","david",21);
         HttpSession session = hsr.getSession();
-        String schoolCode = "GCS2";
+        String schoolCode = "AH";
            
         session.setAttribute("yearsids", new Gson().toJson(this.getYears(schoolCode)));
+        session.setAttribute("schoolCode", schoolCode);
         
         User user = new User();
         
@@ -119,12 +124,9 @@ public class Homepage extends MultiActionController {
                 String message = "welcome user";
                 int termId = 1, yearId = 1;
                 ResultSet rs2 = DBConect.ah.executeQuery("select defaultyearid,defaulttermid from ConfigSchool where  SchoolCode ='"+schoolCode+"'");
-                if (rs2.next()) {
+                while (rs2.next()) {
                     termId = rs2.getInt("defaulttermid");
                     yearId = rs2.getInt("defaultyearid");
-                }
-                else{
-                    
                 }
                 session.setAttribute("user", user);
                 session.setAttribute("termId", termId);
@@ -174,7 +176,6 @@ public class Homepage extends MultiActionController {
     @ResponseBody
     public String getTermYear(HttpServletRequest hsr, HttpServletResponse hsr1){
         ArrayList<Tupla<Integer,String>> ret = new ArrayList<>();
-        
         String consulta="select * from SchoolTerm where YearID="+hsr.getParameter("id");
         try {
             ResultSet rs = DBConect.ah.executeQuery(consulta);

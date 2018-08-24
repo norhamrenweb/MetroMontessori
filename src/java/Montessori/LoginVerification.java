@@ -25,9 +25,9 @@ public class LoginVerification {
     public LoginVerification(){}
     public static Connection SQLConnection() throws SQLException {
         System.out.println("database.SQLMicrosoft.SQLConnection()");
-        String url = "jdbc:sqlserver://rwi-spain.odbc.renweb.com\\rwi_spain:1433;databaseName=rwi_spain";
-        String loginName = "RWI_SPAIN_CUST";
-        String password = "AlphaHotel+195";
+        String url = "jdbc:sqlserver://ah-zaf.odbc.renweb.com\\ah_zaf:1433;databaseName=ah_zaf";
+        String loginName = "AH_ZAF_CUST";
+        String password = "BravoJuggle+396";
         
         DriverManager.registerDriver(new SQLServerDriver());
         Connection cn = null;

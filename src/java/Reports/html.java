@@ -5,6 +5,7 @@
  */
 package Reports;
 
+import Montessori.DBConect;
 import Montessori.User;
 import Reports.DataFactoryFolder.*;
 import controladores.upload;
@@ -77,20 +78,20 @@ import org.apache.commons.net.ftp.FTPClient;
 @WebServlet(name = "html", urlPatterns = {"/html"})
 public class html extends HttpServlet {
 
-    private DataFactory createFactory(String reportType) {
+    private DataFactory createFactory(String reportType,String cTerm, String cYear) {
         if (reportType == null) {
             return new FactoryActivityLog();
         }
 
         switch (reportType) {
             case "progress_prePrimary":
-                return new FactoryProgressReport_Pre_Primary();
+                return new FactoryProgressReport_Pre_Primary(cTerm,cYear);
 
             case "progress_Yr1_4":
-                return new FactoryProgressReport_grade4();
+                return new FactoryProgressReport_grade4(cTerm,cYear);
 
             case "academic_Gr7":
-                return new FactoryAcademicReport_grade7("false");
+                return new FactoryAcademicReport_grade7("false",cTerm,cYear);
 
             default:
                 return null;
@@ -111,12 +112,16 @@ public class html extends HttpServlet {
         Connection conn = null;
 
         ServletOutputStream os = response.getOutputStream();
-        String codeSchool = "AH-ZAF";
+        String codeSchool = "AH-ZAF"; // cambiar DConect.codeSchool
         String[] stids = request.getParameterValues("destino[]");
         String reportType = request.getParameter("typeReport");
         String checkArchive = request.getParameter("checkArchive");
         String start = request.getParameter("TXThorainicio");
         String finish = request.getParameter("TXThorafin");
+        
+        String termId =  request.getParameter("termId");
+        String yearId =  request.getParameter("yearId");
+        
         DefaultJasperReportsContext context = DefaultJasperReportsContext.getInstance();
         JRPropertiesUtil.getInstance(context).setProperty("net.sf.jasperreports.xpath.executer.factory",
                 "net.sf.jasperreports.engine.util.xml.JaxenXPathExecuterFactory");
@@ -133,9 +138,9 @@ public class html extends HttpServlet {
         boolean showGrade = false;
         DataFactory d;
         if (reportType != null && reportType.equals("academic_Gr7_JP")) {
-            d = new FactoryAcademicReport_grade7("true");
+            d = new FactoryAcademicReport_grade7("true",termId,yearId);
         } else {
-            d = createFactory(reportType);
+            d = createFactory(reportType,termId,yearId);
         }
 
         // InputStream jasperStream = this.getClass().getResourceAsStream("progress_report_2017_gr4.jasper");
@@ -162,7 +167,7 @@ public class html extends HttpServlet {
         if (checkArchive != null && checkArchive.equals("on")) {
             bitesFtp = JasperExportManager.exportReportToPdf(jasperPrint);
             //private void uploadFileToFTP(byte[] b,String codeSchool,String studentId,String term,String year,String nameReport) {
-            uploadFileToFTP(bitesFtp, codeSchool, stids[0], "" + request.getSession().getAttribute("termId"), "" + request.getSession().getAttribute("yearId"), reportType);
+            uploadFileToFTP(bitesFtp, codeSchool, stids[0],termId, yearId, reportType);
         }
         for (int i = 1; i < stids.length; i++) {
             JRDataSource datasource2;
@@ -175,7 +180,7 @@ public class html extends HttpServlet {
                 if (checkArchive != null && checkArchive.equals("on")) {
                     bitesFtp = JasperExportManager.exportReportToPdf(jasperPrintAux);
                     //private void uploadFileToFTP(byte[] b,String codeSchool,String studentId,String term,String year,String nameReport) {
-                    uploadFileToFTP(bitesFtp, codeSchool, stids[i], "" + request.getSession().getAttribute("termId"), "" + request.getSession().getAttribute("yearId"), reportType);
+                    uploadFileToFTP(bitesFtp, codeSchool, stids[i],termId, yearId, reportType);
                 }
             } else {
                 datasource2 = new JRBeanCollectionDataSource(FactoryActivityLog.getDataSource(request, ((User) request.getSession().getAttribute("user")).getName(), start, finish, stids[i], this.getServletContext()), true);
@@ -232,29 +237,22 @@ public class html extends HttpServlet {
     }
 
     private void uploadFileToFTP(byte[] b, String codeSchool, String studentId, String term, String year, String nameReport) {
-        String server = "192.168.1.36";
-        int port = 21;
-        String user = "david";
-        String pass = "david";
-
+        String server = DBConect.serverFtp;
+        int port = DBConect.portFTP;
+        String user = DBConect.userFTP;
+        String pass = DBConect.passFTP;
+//** arreglar **//
         FTPClient ftpClient = new FTPClient();
         try {
             ftpClient.connect(server, port);
             ftpClient.login(user, pass);
             ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
 
-            String rutaCompleta = "/ReportCards/" + codeSchool;
+            String rutaCompleta = "/"+DBConect.codeSchool+"/ReportCards/" + studentId;
+          
             if (!ftpClient.changeWorkingDirectory(rutaCompleta));
             {
-                ftpClient.changeWorkingDirectory("/ReportCards");
-                ftpClient.mkd(codeSchool);
-                ftpClient.changeWorkingDirectory(codeSchool);
-            }
-
-            rutaCompleta += "/" + studentId;
-            if (!ftpClient.changeWorkingDirectory(rutaCompleta));
-            {
-                ftpClient.changeWorkingDirectory("/ReportCards/" + codeSchool);
+                ftpClient.changeWorkingDirectory("/"+DBConect.codeSchool+"/ReportCards/");
                 ftpClient.mkd(studentId);
                 ftpClient.changeWorkingDirectory(studentId);
             }
