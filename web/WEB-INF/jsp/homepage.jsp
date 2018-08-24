@@ -24,8 +24,8 @@
                 //VARIABLE CUANDO HEMOS CREADO UNA LESSONS CORRECTAMENTE
 
             <%--      var lessondelete = '<%= request.getParameter("messageDelete") %>'; --%>
-
-
+           
+                
                 $('.pasar').click(function () {
                     var exist = false;
                     $('#destino option').each(function () {
@@ -134,7 +134,7 @@
                 $("#table_id").DataTable().page(Number(nP)).draw('page')
 
             });
-            function changeTermYear() {
+           /* function changeTermYear() {
                 var year = $('#yearSelect option:selected').val();
                 var term = $('#termSelect option:selected').val();
                 var url = "<c:url value="/changeTermYear.htm"/>?yearid=" + year + "&termid=" + term;
@@ -157,7 +157,7 @@
                     }
 
                 });
-            }
+            }*/
 
 
             function deleteSelectSure(deleteLessonsSelected, deleteLessonsName) {
@@ -280,6 +280,7 @@
             }
             function accessrsrcs(LessonsSelected, LessonsName)
             {
+                changeTermYearModify();
                 var lessonName = LessonsName.substring(1, LessonsName.length);
                 var path = LessonsSelected + "-" + lessonName;
                 window.open("<c:url value="/lessonresources/loadResources.htm?LessonsSelected="/>" + path);
@@ -287,7 +288,7 @@
             }
             function rowselect(LessonsSelected)
             {
-
+                changeTermYearModify();
                 window.open("<c:url value="/lessonprogress/loadRecords.htm?LessonsSelected="/>" + LessonsSelected);
             }
             ;
@@ -308,6 +309,8 @@
             ;
             function modifySelect(LessonsSelected)
             {
+                changeTermYearModify();
+
                 window.open("<c:url value="/editlesson/start.htm?LessonsSelected="/>" + LessonsSelected);
             }
             ;
@@ -403,7 +406,7 @@
             }
             function showCalendar()
                         {
-
+                                changeTermYearModify();
                                 id = '11343';
                                 window.open("<c:url value="/schedule.htm?id="/>" + id);
                         }
