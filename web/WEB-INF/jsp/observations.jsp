@@ -923,9 +923,11 @@
             }
 
             function getsubjects(idstudent) {
+                var idYear = $("#btnYearmTerm").attr("data-idyear")
+                var idTerm = $("#btnYearmTerm").attr("data-idterm");
                 $.ajax({
                     type: 'POST',
-                    url: 'subjects.htm?idstudent=' + idstudent,
+                    url: 'subjects.htm?idstudent=' + idstudent+'&idTerm='+idTerm+'&idYear='+idYear,
                     datatype: "json",
                     contentType: "application/json",
                     success: function (data) {

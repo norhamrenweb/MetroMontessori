@@ -558,7 +558,7 @@ public class ProgressbyStudent {
         }
 
         // List<Subject> subjects = new ArrayList<>();
-        subjects = getSubjects(student.getId_students(), hsr,"2","59");
+        subjects = getSubjects(student.getId_students(), hsr,termId,yearId);
 
         String info = new Gson().toJson(student);
         String sub = new Gson().toJson(subjects);

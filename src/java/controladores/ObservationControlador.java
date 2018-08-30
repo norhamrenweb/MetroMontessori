@@ -137,9 +137,12 @@ public class ObservationControlador {
     @RequestMapping("/observations/subjects.htm")
     @ResponseBody
     public String getsubjects(HttpServletRequest hsr, HttpServletResponse hsr1) throws Exception {
+        
+        String termId = "" + hsr.getParameter("idTerm");
+        String yearId = "" + hsr.getParameter("idYear");
         String id = hsr.getParameter("idstudent");
         JSONObject json = new JSONObject();
-        List<Subject> subs = ProgressbyStudent.getSubjects(Integer.parseInt(id), hsr,"2","59");
+        List<Subject> subs = ProgressbyStudent.getSubjects(Integer.parseInt(id), hsr,termId,yearId);
         Subject sub = new Subject();
         sub.setName("Select Subject");
         String[] s = new String[1];
