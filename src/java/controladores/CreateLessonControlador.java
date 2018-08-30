@@ -464,7 +464,7 @@ public class CreateLessonControlador {
             sub.setName("Select subject");
             activesubjects.add(sub);
 
-            for (int i = 1; i < subjects.size(); i++) {
+            for (int i = 0; i < subjects.size(); i++) {
                 if (mapSubject.containsKey(subjects.get(i).getId()[0])) {
                     subjects.get(i).setName(mapSubject.get(subjects.get(i).getId()[0]));
                     activesubjects.add(subjects.get(i));

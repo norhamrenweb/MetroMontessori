@@ -59,7 +59,7 @@ public class Homepage extends MultiActionController {
         DBConect.close();
         c = new DBConect(hsr, hsr1,"CSG2","95.216.37.137","david","david",21);
         HttpSession session = hsr.getSession();
-        String schoolCode = "AH";
+        String schoolCode = "GCS2";
            
         session.setAttribute("yearsids", new Gson().toJson(this.getYears(schoolCode)));
         session.setAttribute("schoolCode", schoolCode);

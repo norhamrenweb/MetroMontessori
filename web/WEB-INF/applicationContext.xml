@@ -22,9 +22,9 @@ change the defeinition of the progress view,very important
 <!--must change the ftp path as well,veryimportant, also change the school code inside Homepage controlador also in Login verification calss-->
 <bean id="dataSourceAH" class="org.springframework.jdbc.datasource.DriverManagerDataSource"
         p:driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver"
-        p:url="jdbc:sqlserver://ah-zaf.odbc.renweb.com\ah_zaf:1433;databaseName=ah_zaf"
-         p:username="AH_ZAF_CUST"
-        p:password="BravoJuggle+396"/>
+        p:url="jdbc:sqlserver://rwi-spain.odbc.renweb.com\rwi_spain:1433;databaseName=rwi_spain"
+         p:username="rwi_spain_cust"
+        p:password="AlphaHotel+195"/>
         
 <bean id="dataSourceEDU" class="org.springframework.jdbc.datasource.DriverManagerDataSource"
         p:driverClassName="org.postgresql.Driver"
